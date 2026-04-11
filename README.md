@@ -39,6 +39,11 @@ $ cp ~/Downloads/cpptools-proxy cpptools # replace ~/Downloads/cpptools-proxy wi
 
 ```
 
+On Linux/Mac OS you will need to set the executable bit on the original `cpptools-orig` binary before you can use the proxy.
+```bash
+chmod +x cpptools-orig
+```
+
 ### Install with custom binary path to cpptools/cpptools-proxy binary
 
 The steps are similar as above, except the last step where instead of copying the cpptools proxy binaries as usual, to this:
