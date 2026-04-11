@@ -114,6 +114,25 @@ The Makefile uses standard gcc flags. To customize compilation:
 CC=clang CFLAGS="-Wall -O3" make
 ```
 
+## Adding application properties (Windows only)
+If you want to embed application details, do these steps:
+```bash
+# run this step within the same path as the cpptools-proxy folder
+# using MinGW's windres
+windres -i cpptools-proxy.rc -o cpptools-proxy.res -O coff
+# or using MSVC's rc compiler
+#rc /fo cpptools-proxy.res cpptools-proxy.rc
+# then you can compile usually
+gcc -o cpptools-proxy.exe cpptools-proxy.c cpptools-proxy.res
+# or within msvc
+#cl /Fe:cpptools-proxy.exe cpptools-proxy.c cpptools-proxy.res
+```
+
+This step is not required when using Zig's C/C++ toolchain, you can pass the .rc file directly.
+```bash
+zig cc -o cpptools-proxy.exe cpptools-proxy.c cpptools-proxy.rc
+```
+
 ## Cleaning Up
 
 ```bash
