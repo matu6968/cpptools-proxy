@@ -6,12 +6,6 @@ A minimal C implementation of an LSP (Language Server Protocol) proxy that inter
 
 Ever since Microsoft tightened the official C/C++ language server [at the LSP level to not allow VSCode forks](https://github.com/VSCodium/vscodium/issues/2300) people could no longer use the official C/C++ extension on VSCode forks. This [obhiously got people angry](https://github.com/VSCodium/vscodium/issues/2300#issuecomment-3315030963) and had to use alternatives such as [Clangd](https://clangd.llvm.org), luckily you don't need to find alternatives anymore (assuming your architecture is supported by extension) thanks to this proxy.
 
-## Building
-
-```bash
-make
-```
-
 This compiles the C program with warnings enabled and standard optimizations.
 
 ## Usage
@@ -20,26 +14,45 @@ The proxy is designed to be inserted in the communication pipeline between an LS
 
 ### Install
 
-First install the Microsoft C/C++ language server in your VSCodium install, then to install the binary, find where is your `vscode-cpptools` package:
+First, install the [Microsoft C/C++ language server](https://github.com/microsoft/vscode-cpptools/releases) in your VSCodium install.
+
+Then, to install `cpptools-proxy`, find and reorganize your installed `vscode-cpptools` package:
+
+#### Finding `cpptools`
+
 ```bash
-# On Windows, the extensions path is in C:\Users\<user>\.vscode\extensions
-# On Mac OS, the extensions path is in /Users/<user>/.vscode/extensions
-# On Linux, the extensions path is in /home/<user>/.vscode/extensions
+# On Windows, the extensions path is in `$USERPROFILE\.vscode\extensions`
+# On Mac OS, the extensions path is in `/Users/<user>/.vscode/extensions`
+# On GNU/Linux distros, the extensions path is in `$HOME/.vscode/extensions`
+# VS Code forks will replace the `.vscode` name with something else
 $ cd ~/.vscode/extensions
+
+# What relevant extensions directories do I have on my system?
 $ ls | grep cpptools
 ms-vscode.cpptools-1.31.4-linux-x64
 ms-vscode.cpptools-extension-pack-1.5.1
 ms-vscode.cpptools-themes-2.0.0
-# the folder with your OS name is the one that the binary will be installed
-$ cd ms-vscode.cpptools-1.31.4-linux-x64/bin
+
+# Path will vary with your system name and architecture
+$ cd ms-vscode.cpptools-1.31.4-linux-x64
+$ cd bin
+```
+
+#### Replacing `cpptools`
+
+```bash
+# For the proxy to work, you must move `cpptools[.exe]` specifically to `cpptools-orig[.exe]`
 $ mv cpptools cpptools-orig
-# download the cpptools-proxy[.exe] binary from the Releases tab or compile it yourself, see instructions above
-$ cp ~/Downloads/cpptools-proxy cpptools # replace ~/Downloads/cpptools-proxy with your real path to the compiled build and add .exe if on Windows like here
-#$ cp ~/cpptools-proxy.exe cpptools.exe
+
+# Download the `cpptools-proxy[.exe]` binary from the Releases tab or compile it yourself, per instructions above
+$ cp ~/Downloads/cpptools-proxy cpptools
+
+# If on Windowsreplace ~/Downloads/cpptools-proxy with your real path to the compiled build and add .exe if on Windows like here
+$ cp ~/Downloads/cpptools-proxy.exe cpptools.exe
 
 ```
 
-On Linux/Mac OS you will need to set the executable bit on the original `cpptools-orig` binary before you can use the proxy.
+On Linux or Mac OS, you will need to set the executable bit on the original `cpptools-orig` binary before you can use the proxy
 ```bash
 chmod +x cpptools-orig
 ```
@@ -57,6 +70,12 @@ cat <<EOF > cpptools
 $cpptoolsproxypath --path $cpptoolspath
 EOF
 chmod +x cpptools
+```
+
+## Building
+
+```bash
+make
 ```
 
 
